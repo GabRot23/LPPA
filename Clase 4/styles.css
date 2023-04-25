@@ -1,0 +1,44 @@
+.container {
+    margin: 25px;
+    font-family: arial;
+    max-width: 700px;
+}
+
+.cabecera {
+    padding: 10px;
+    height: 100px;
+    background-color: lightgrey;
+}
+
+#titulo {
+    float: left;
+}
+
+#logo {
+    display: block;
+    float: right;
+    max-height: 100%;
+    max-width: 100%;
+} 
+
+.menu {
+    width: 15%;
+    float: left;
+}
+
+.contenidos {
+    width: 85%;
+    float: left;
+}
+
+.pie {
+    background-color: lightgrey;
+}
+
+#nombre {
+    float: right;
+}
+
+#email {
+    float: left;
+}
