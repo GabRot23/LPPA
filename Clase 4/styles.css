@@ -1,44 +1,72 @@
 .container {
-    margin: 25px;
-    font-family: arial;
-    max-width: 700px;
+  margin: 25px;
+  font-family: arial;
+  max-width: 700px;
 }
 
 .cabecera {
-    padding: 10px;
-    height: 100px;
-    background-color: lightgrey;
+  padding: 10px;
+  height: 100px;
+  background-color: lightgrey;
 }
 
 #titulo {
-    float: left;
+  float: left;
 }
 
 #logo {
-    display: block;
-    float: right;
-    max-height: 100%;
-    max-width: 100%;
-} 
+  display: block;
+  float: right;
+  max-height: 100%;
+  max-width: 100%;
+}
 
+.main {
+  height: 400px;
+}
 .menu {
-    width: 15%;
-    float: left;
+  width: 15%;
+  float: left;
 }
 
 .contenidos {
-    width: 85%;
-    float: left;
+  width: 85%;
+  float: left;
+}
+
+.contenidos li {
+  color: blue;
+}
+#css {
+  border: 1px black solid;
+  margin: 10px;
+  padding: 5px;
+  height: 345px;
+  width: 495px;
+}
+#cont_titulo {
+  color: green;
+}
+
+#html {
+  text-decoration: underline solid;
+  color: rgb(99, 116, 51);
+}
+
+#texto_color {
+  color: orange;
 }
 
 .pie {
-    background-color: lightgrey;
+  height: 30px;
+  padding: 15px 5px 5px 5px;
+  background-color: lightgrey;
 }
 
 #nombre {
-    float: right;
+  float: right;
 }
 
 #email {
-    float: left;
+  float: left;
 }
