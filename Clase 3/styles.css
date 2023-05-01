@@ -1,0 +1,26 @@
+#container {
+  margin: 25px;
+  font-family: arial;
+  max-width: 700px;
+}
+#perfil {
+  width: 150px;
+  height: 150px;
+}
+
+.red {
+  margin-top: 20px;
+}
+.formulario {
+  margin-top: 50px;
+}
+table {
+  width: 30%;
+}
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 1% 5%;
+}
