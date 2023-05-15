@@ -1,0 +1,74 @@
+.container {
+  font-family: arial;
+}
+
+.cabecera {
+  height: 70px;
+  background-color: lightgrey;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0;
+  padding-left: 10px;
+}
+
+.cuadrados {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  padding: 0;
+}
+
+#titulo {
+  display: block;
+}
+
+.box1 {
+  width: 50px;
+  background-color: red;
+}
+
+.box2 {
+  background-color: blue;
+  width: 50px;
+}
+
+.palabras-claves {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.pc-foto {
+  width: 50%;
+  overflow: hidden;
+  margin: 50px auto;
+  display: block;
+  width: 400px;
+  height: 400px;
+  transform: rotate(-15deg);
+}
+.pc-foto img {
+  max-width: 400px;
+  max-height: 400px;
+  border-radius: 30px;
+}
+.imagecontainer {
+  overflow: hidden;
+  border-radius: 28px;
+  transform: rotate(45deg);
+  -ms-transform: rotate(45deg); /* IE 9 */
+  -webkit-transform: rotate(45deg); /* Safari and Chrome */
+  position: relative;
+
+  /* non-essential styling */
+  -webkit-box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.05);
+}
+.imagecontainer img {
+  transform: rotate(-45deg);
+}
+
+.pc-texto {
+  width: 50%;
+}
