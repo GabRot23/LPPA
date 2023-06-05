@@ -28,13 +28,13 @@ Array.prototype.slice.call(forms).forEach(function (form) {
 // Validación de Nombre Completo
 
 function validarNombre() {
-  const nombre = nombreCompleto.value;
-  const regexValidator = new RegExp("^([A-Za-z]+ )+[A-Za-z]+$|^[A-Za-z]+$");
+  const nombreValido = nombreCompleto.value;
+  const regNombre = new RegExp(/^(?=.*[A-Za-z]+\s[A-z]+).{6,}$/);
 
-  if (regexValidator.test(nombre)) {
-    nombreCompleto.classList.add("is-invalid");
-  } else {
+  if (regNombre.test(nombreValido)) {
     nombreCompleto.classList.add("is-valid");
+  } else {
+    nombreCompleto.classList.add("is-invalid");
   }
 }
 
@@ -50,8 +50,8 @@ nombreCompleto.addEventListener("focus", ocultarErrorNombre);
 
 function validarEmail() {
   const emailValido = email.value;
-  const expresion = /\w+@\w+\.[a-z]/;
-  if (expresion.test(emailValido)) {
+  const regEmail = /\w+@\w+\.[a-z]/;
+  if (regEmail.test(emailValido)) {
     email.classList.add("is-valid");
   } else {
     email.classList.add("is-invalid");
@@ -70,7 +70,7 @@ email.addEventListener("focus", ocultarErrorEmail);
 
 function validarPassword() {
   const passwordValido = password.value;
-  const expresion = new RegExp("^[a-zA-Z0-9]{8,}$");
+  const expresion = new RegExp("^(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
   if (expresion.test(passwordValido)) {
     password.classList.add("is-valid");
   } else {
@@ -130,8 +130,8 @@ telefono.addEventListener("focus", ocultarErrorTelefono);
 
 function validarEdad() {
   const edadValido = edad.value;
-  const expresion = new RegExp("^[0-9]{2}$");
-  if (expresion.test(edadValido)) {
+  const regEdad = new RegExp("^[0-9]{2}$");
+  if (regEdad.test(edadValido) && edadValido >= 18) {
     edad.classList.add("is-valid");
   } else {
     edad.classList.add("is-invalid");
@@ -150,8 +150,8 @@ edad.addEventListener("focus", ocultarErrorEdad);
 
 function validarDireccion() {
   const direccionValido = direccion.value;
-  const expresion = new RegExp("^d+sw+(sw+)?$");
-  if (expresion.test(direccionValido)) {
+  const regDireccion = new RegExp(/[A-Za-z]+\s[0-9]+/i);
+  if (regDireccion.test(direccionValido) && direccionValido.length > 4) {
     direccion.classList.add("is-valid");
   } else {
     direccion.classList.add("is-invalid");

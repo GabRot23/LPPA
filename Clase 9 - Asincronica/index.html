@@ -18,7 +18,7 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="container-md">
+    <div class="container-md mt-5 bg-light">
       <form class="row g-3 needs-validation" novalidate>
         <div class="col-md-6">
           <label for="nombreCompleto" class="form-label">Nombre completo</label>
@@ -67,10 +67,9 @@
         </div>
 
         <div class="col-md-6">
-          <label for="validationServerUsername" class="form-label"
+          <label for="repetirPassword" class="form-label"
             >Repetir Contraseña</label
           >
-          <div class="input-group has-validation">
             <input
               type="password"
               class="form-control"
@@ -81,15 +80,14 @@
             <div id="repetirPasswordFeedback" class="invalid-feedback">
               Por favor, las contraseñas deben coincidir.
             </div>
-          </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-2">
           <label for="edad" class="form-label">Edad</label>
           <input
             type="number"
             class="form-control"
-            id="validationServer03"
+            id="edad"
             aria-describedby="edadFeedback"
             required
           />
@@ -98,10 +96,10 @@
           </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
           <label for="telefono" class="form-label">Teléfono</label>
           <input
-            type="text"
+            type="number"
             class="form-control"
             id="telefono"
             aria-describedby="telefonoFeedback"
@@ -112,7 +110,7 @@
           </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-6">
           <label for="direccion" class="form-label">Dirección</label>
           <input
             type="text"
@@ -122,7 +120,7 @@
             required
           />
           <div id="direccionFeedback" class="invalid-feedback">
-            Proporciona una dirección válida.
+            Proporciona una dirección válida (nombre de calle y altura).
           </div>
         </div>
 
@@ -157,7 +155,7 @@
         <div class="col-md-3">
           <label for="dni" class="form-label">DNI</label>
           <input
-            type="text"
+            type="number"
             class="form-control"
             id="dni"
             aria-describedby="dniFeedback"
