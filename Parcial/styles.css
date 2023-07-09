@@ -1,0 +1,82 @@
+html {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.edition {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  height: 30px;
+  border-top: 5px solid orange;
+  border-bottom: 5px solid orange;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.brand h1 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 80px;
+}
+.brand sub {
+  font-size: 20px;
+  font-style: italic;
+}
+.brand h1 sub {
+  display: flex;
+}
+.container {
+  border-top: 15px solid orange;
+  margin-top: 20px;
+}
+.noticia {
+  float: left;
+  width: 65%;
+  margin: 30px 20px 20px 30px;
+}
+.noticia img {
+  max-width: 500px;
+  align-self: center;
+}
+
+.noticia h2 {
+  font-size: 40px;
+}
+
+.titulos {
+  float: left;
+  width: 30%;
+}
+.titulo {
+  margin: 20px;
+  font-style: italic;
+}
+.mini_noticia {
+  background-color: aqua;
+  margin: 0;
+  padding: 10px 20px 10px 20px;
+  border-top: 3px solid orange;
+}
+.mini_noticia h3 {
+  color: white;
+}
+.mini_noticia p {
+  font-style: italic;
+}
+
+.tabla {
+  background-color: aqua;
+  color: white;
+  margin: 0;
+  border-top: 3px solid orange;
+  padding: 10px 20px 10px 20px;
+}
+.tabla ul li {
+  list-style: none;
+}
