@@ -14,12 +14,12 @@ namespace WebAPIUAI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProfesoresController : ControllerBase
+    public class ProfesoresController : CustomBaseController
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
 
-        public ProfesoresController(ApplicationDbContext context, IMapper mapper)
+        public ProfesoresController(ApplicationDbContext context, IMapper mapper) : base(context, mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -28,57 +28,31 @@ namespace WebAPIUAI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ProfesorDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         {
-            var queryable = context.Profesores.AsQueryable();
-            await HttpContext.InsertarParametrosPaginacion(queryable, paginacionDTO.CantidadRegistrosPorPagina);
-
-            var profesores = await queryable.Paginar(paginacionDTO).ToListAsync();
-            var profesoresDTO = mapper.Map<List<ProfesorDTO>>(profesores);
-            return profesoresDTO;
+            return await Get<Profesor, ProfesorDTO>(paginacionDTO);
         }
 
         [HttpGet("{id}", Name = "ObtenerProfesor")]
         public async Task<ActionResult<ProfesorDTO>> Get(int id)
         {
-            var profesor = await context.Profesores.FirstOrDefaultAsync(x => x.Id == id);
-            if (profesor == null)
-            {
-                return NotFound();
-            }
-            var profesorDTO = mapper.Map<ProfesorDTO>(profesor);
-            return profesorDTO;
+            return await Get<Profesor, ProfesorDTO>(id);
         }
 
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] ProfesorCreacionDTO profesorCreacionDTO)
         {
-            var profesor = mapper.Map<Profesor>(profesorCreacionDTO);
-            context.Add(profesor);
-            await context.SaveChangesAsync();
-            var profesorDTO = mapper.Map<ProfesorDTO>(profesor);
-            return new CreatedAtRouteResult("ObtenerProfesor", new { id = profesor.Id }, profesorDTO);
+            return await Post<ProfesorCreacionDTO, Profesor, ProfesorDTO>(profesorCreacionDTO, "ObtenerProfesor");
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] ProfesorCreacionDTO profesorCreacionDTO)
         {
-            var profesor = mapper.Map<Profesor>(profesorCreacionDTO);
-            profesor.Id = id;
-            context.Entry(profesor).State = EntityState.Modified;
-            await context.SaveChangesAsync();
-            return NoContent();
+            return await Put<ProfesorCreacionDTO, Profesor>(id, profesorCreacionDTO);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var existe = await context.Profesores.AnyAsync(x => x.Id == id);
-            if (!existe)
-            {
-                return NotFound();
-            }
-            context.Remove(new Profesor { Id = id });
-            await context.SaveChangesAsync();
-            return NoContent();
+            return await Delete<Profesor>(id);
         }
     }
 }

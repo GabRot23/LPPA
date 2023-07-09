@@ -7,14 +7,12 @@ using WebAPIUAI.Contracts;
 
 namespace WebAPIUAI.Models
 {
-    public class Materia : IId
+    public class Sede : IId
     {
         public int Id { get; set; }
         [Required]
         [StringLength(120)]
         public string Nombre { get; set; }
-        public List<MateriasFacultades> MateriasFacultades { get; set; }
-        public List<MateriasProfesores> MateriasProfesores { get; set; }
         public List<MateriasSedes> MateriasSedes { get; set; }
     }
 }

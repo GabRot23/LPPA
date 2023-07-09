@@ -13,12 +13,12 @@ namespace WebAPIUAI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FacultadesController : ControllerBase
+    public class FacultadesController : CustomBaseController
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
 
-        public FacultadesController(ApplicationDbContext context, IMapper mapper)
+        public FacultadesController(ApplicationDbContext context, IMapper mapper) : base(context, mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -27,58 +27,31 @@ namespace WebAPIUAI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<FacultadDTO>>> Get()
         {
-            var facultades = await context.Facultades.ToListAsync();
-            var facultadesDTO = mapper.Map<List<FacultadDTO>>(facultades);
-            return facultadesDTO;
+            return await Get<Facultad, FacultadDTO>();
         }
 
         [HttpGet("{id:int}", Name = "obtenerFacultad")]
         public async Task<ActionResult<FacultadDTO>> Get(int id)
         {
-            var facultad = await context.Facultades.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (facultad == null)
-            {
-                return NotFound();
-            }
-
-            var facultadDTO = mapper.Map<FacultadDTO>(facultad);
-            return facultadDTO;
+            return await Get<Facultad, FacultadDTO>(id);
         }
 
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] FacultadCreacionDTO facultadCreacionDTO)
         {
-            var facultad = mapper.Map<Facultad>(facultadCreacionDTO);
-            context.Add(facultad);
-            await context.SaveChangesAsync();
-            var facultadDTO = mapper.Map<FacultadDTO>(facultad);
-            return new CreatedAtRouteResult("obtenerFacultad", new { id = facultadDTO.Id }, facultadDTO);
+            return await Post<FacultadCreacionDTO, Facultad, FacultadDTO>(facultadCreacionDTO, "obtenerFacultad");
         }
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Put(int id, [FromBody] FacultadCreacionDTO facultadCreacionDTO)
         {
-            var facultad = mapper.Map<Facultad>(facultadCreacionDTO);
-            facultad.Id = id;
-            context.Entry(facultad).State = EntityState.Modified;
-            await context.SaveChangesAsync();
-            return NoContent();
+            return await Put<FacultadCreacionDTO, Facultad>(id, facultadCreacionDTO);
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var existe = await context.Facultades.AnyAsync(x => x.Id == id);
-
-            if (!existe)
-            {
-                return NotFound();
-            }
-
-            context.Remove(new Facultad { Id = id });
-            await context.SaveChangesAsync();
-            return NoContent();
+            return await Delete<Facultad>(id);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using WebAPIUAI.DTOs;
 using WebAPIUAI.Models;
 
@@ -14,6 +15,10 @@ namespace WebAPIUAI.Helpers
         {
             CreateMap<Facultad, FacultadDTO>().ReverseMap();
             CreateMap<FacultadCreacionDTO, Facultad>();
+
+            CreateMap<IdentityUser, UserDTO>();
+            CreateMap<Sede, SedeDTO>().ReverseMap();
+            CreateMap<SedeCreacionDTO, Sede>();
             CreateMap<Profesor, ProfesorDTO>().ReverseMap();
             CreateMap<ProfesorCreacionDTO, Profesor>();
             CreateMap<Materia, MateriaDetallesDTO>().ReverseMap();
