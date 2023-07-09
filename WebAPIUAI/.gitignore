@@ -9,6 +9,10 @@ project.lock.json
 
 # Visual Studio Code
 .vscode
+// agregar excepcion de migraciones
+!**/Migrations/*.cs
+!**/Migrations/*.Designer.cs
+!**/Migrations/*.resx
 
 # User-specific files
 *.suo
