@@ -68,12 +68,16 @@ namespace WebAPIUAI
                     ClockSkew = TimeSpan.Zero
                 });
 
-            // services.AddAuthorization(options =>
-            // {
-            //     options.AddPolicy("EsAdmin", policy => policy.RequireClaim("EsAdmin"));
-            //     options.AddPolicy("EsAlumno", policy => policy.RequireClaim("EsAlumno"));
-            //     options.AddPolicy("EsProfesor", policy => policy.RequireClaim("EsProfesor"));
-            // });
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://localhost:3000")// Cambiar al tener la app
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowAnyHeader();
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -91,6 +95,7 @@ namespace WebAPIUAI
 
             app.UseRouting();
 
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 
