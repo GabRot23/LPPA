@@ -11,5 +11,6 @@ namespace WebAPIUAI.DTOs
         [Required]
         [StringLength(50)]
         public string Nombre { get; set; }
+        public List<int> CarrerasIds { get; set; }
     }
 }

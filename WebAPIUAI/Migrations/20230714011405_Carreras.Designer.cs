@@ -12,8 +12,8 @@ using WebAPIUAI.Data;
 namespace WebAPIUAI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230709150502_TablasIdentity")]
-    partial class TablasIdentity
+    [Migration("20230714011405_Carreras")]
+    partial class Carreras
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -223,6 +223,30 @@ namespace WebAPIUAI.Migrations
                     b.ToTable("UsuarioTokens", (string)null);
                 });
 
+            modelBuilder.Entity("WebAPIUAI.Models.Carrera", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FacultadId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacultadId");
+
+                    b.ToTable("Carreras");
+                });
+
             modelBuilder.Entity("WebAPIUAI.Models.Facultad", b =>
                 {
                     b.Property<int>("Id")
@@ -239,69 +263,6 @@ namespace WebAPIUAI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Facultades");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.Materia", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Materias");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.MateriasFacultades", b =>
-                {
-                    b.Property<int>("MateriaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FacultadId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MateriaId", "FacultadId");
-
-                    b.HasIndex("FacultadId");
-
-                    b.ToTable("MateriasFacultades");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.MateriasProfesores", b =>
-                {
-                    b.Property<int>("MateriaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProfesorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MateriaId", "ProfesorId");
-
-                    b.HasIndex("ProfesorId");
-
-                    b.ToTable("MateriasProfesores");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.MateriasSedes", b =>
-                {
-                    b.Property<int>("MateriaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SedeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MateriaId", "SedeId");
-
-                    b.HasIndex("SedeId");
-
-                    b.ToTable("MateriasSedes");
                 });
 
             modelBuilder.Entity("WebAPIUAI.Models.Profesor", b =>
@@ -328,7 +289,7 @@ namespace WebAPIUAI.Migrations
                     b.ToTable("Profesores");
                 });
 
-            modelBuilder.Entity("WebAPIUAI.Models.Sede", b =>
+            modelBuilder.Entity("WebAPIUAI.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -336,14 +297,21 @@ namespace WebAPIUAI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaExpiracion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sedes");
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -397,85 +365,20 @@ namespace WebAPIUAI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebAPIUAI.Models.MateriasFacultades", b =>
+            modelBuilder.Entity("WebAPIUAI.Models.Carrera", b =>
                 {
                     b.HasOne("WebAPIUAI.Models.Facultad", "Facultad")
-                        .WithMany("MateriaFacultades")
+                        .WithMany("Carreras")
                         .HasForeignKey("FacultadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebAPIUAI.Models.Materia", "Materia")
-                        .WithMany("MateriasFacultades")
-                        .HasForeignKey("MateriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Facultad");
-
-                    b.Navigation("Materia");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.MateriasProfesores", b =>
-                {
-                    b.HasOne("WebAPIUAI.Models.Materia", "Materia")
-                        .WithMany("MateriasProfesores")
-                        .HasForeignKey("MateriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebAPIUAI.Models.Profesor", "Profesor")
-                        .WithMany("MateriasProfesores")
-                        .HasForeignKey("ProfesorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Materia");
-
-                    b.Navigation("Profesor");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.MateriasSedes", b =>
-                {
-                    b.HasOne("WebAPIUAI.Models.Materia", "Materia")
-                        .WithMany("MateriasSedes")
-                        .HasForeignKey("MateriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebAPIUAI.Models.Sede", "Sede")
-                        .WithMany("MateriasSedes")
-                        .HasForeignKey("SedeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Materia");
-
-                    b.Navigation("Sede");
                 });
 
             modelBuilder.Entity("WebAPIUAI.Models.Facultad", b =>
                 {
-                    b.Navigation("MateriaFacultades");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.Materia", b =>
-                {
-                    b.Navigation("MateriasFacultades");
-
-                    b.Navigation("MateriasProfesores");
-
-                    b.Navigation("MateriasSedes");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.Profesor", b =>
-                {
-                    b.Navigation("MateriasProfesores");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.Sede", b =>
-                {
-                    b.Navigation("MateriasSedes");
+                    b.Navigation("Carreras");
                 });
 #pragma warning restore 612, 618
         }

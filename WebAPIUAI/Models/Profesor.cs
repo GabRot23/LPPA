@@ -15,6 +15,5 @@ namespace WebAPIUAI.Models
         public string Nombre { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public int DNI { get; set; }
-        public List<MateriasProfesores> MateriasProfesores { get; set; }
     }
 }

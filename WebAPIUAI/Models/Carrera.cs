@@ -2,14 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPIUAI.Contracts;
 
 namespace WebAPIUAI.Models
 {
-    public class MateriasFacultades
+    public class Carrera : IId
     {
-        public int MateriaId { get; set; }
+        public int Id { get; set; }
+        public string Nombre { get; set; }
         public int FacultadId { get; set; }
-        public Materia Materia { get; set; }
+        public string Descripcion { get; set; }
         public Facultad Facultad { get; set; }
     }
 }

@@ -6,11 +6,55 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAPIUAI.Migrations
 {
     /// <inheritdoc />
-    public partial class TablasIdentity : Migration
+    public partial class Carreras : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Facultades",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Facultades", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Profesores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DNI = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Profesores", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaExpiracion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -48,6 +92,27 @@ namespace WebAPIUAI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Carreras",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FacultadId = table.Column<int>(type: "int", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Carreras", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Carreras_Facultades_FacultadId",
+                        column: x => x.FacultadId,
+                        principalTable: "Facultades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,6 +222,11 @@ namespace WebAPIUAI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Carreras_FacultadId",
+                table: "Carreras",
+                column: "FacultadId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RolClaims_RoleId",
                 table: "RolClaims",
                 column: "RoleId");
@@ -200,6 +270,15 @@ namespace WebAPIUAI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Carreras");
+
+            migrationBuilder.DropTable(
+                name: "Profesores");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
+            migrationBuilder.DropTable(
                 name: "RolClaims");
 
             migrationBuilder.DropTable(
@@ -213,6 +292,9 @@ namespace WebAPIUAI.Migrations
 
             migrationBuilder.DropTable(
                 name: "UsuarioTokens");
+
+            migrationBuilder.DropTable(
+                name: "Facultades");
 
             migrationBuilder.DropTable(
                 name: "Roles");

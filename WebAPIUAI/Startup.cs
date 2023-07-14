@@ -103,21 +103,6 @@ namespace WebAPIUAI
             {
                 endpoints.MapControllers();
             });
-
-            // WebApplication webApp = app as WebApplication;
-            // using (IServiceScope scope = webApp.Services.CreateScope())
-            // {
-            //     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            //     var roles = new List<string> { "Admin", "Alumno", "Profesor" };
-
-            //     foreach (var rol in roles)
-            //     {
-            //         if (!roleManager.RoleExistsAsync(rol).Result)
-            //         {
-            //             roleManager.CreateAsync(new IdentityRole(rol)).Wait();
-            //         }
-            //     }
-            // }
         }
     }
 }

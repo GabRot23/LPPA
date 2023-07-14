@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace WebAPIUAI.DTOs
 {
-    public class SedeCreacionDTO
+    public class CarreraCreacionDTO
     {
         [Required]
-        [StringLength(120)]
+        [StringLength(50)]
         public string Nombre { get; set; }
+        [Required]
+        [StringLength(150)]
+        public string Descripcion { get; set; }
+        [Required]
+        public int FacultadId { get; set; }
     }
 }

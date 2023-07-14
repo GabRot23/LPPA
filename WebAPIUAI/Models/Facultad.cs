@@ -13,6 +13,6 @@ namespace WebAPIUAI.Models
         [Required]
         [StringLength(50)]
         public string Nombre { get; set; }
-        public List<MateriasFacultades> MateriaFacultades { get; set; }
+        public List<Carrera> Carreras { get; set; }
     }
 }
