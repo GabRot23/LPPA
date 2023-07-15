@@ -8,9 +8,10 @@ namespace WebAPIUAI.DTOs
 {
     public class UserInfo
     {
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        [EmailAddress(ErrorMessage = "El campo {0} debe ser una dirección de correo electrónico válida")]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Password { get; set; }
     }
 }

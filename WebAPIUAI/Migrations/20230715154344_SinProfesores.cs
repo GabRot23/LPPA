@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAPIUAI.Migrations
 {
     /// <inheritdoc />
-    public partial class Carreras : Migration
+    public partial class SinProfesores : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,21 +22,6 @@ namespace WebAPIUAI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Facultades", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Profesores",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DNI = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Profesores", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,9 +85,9 @@ namespace WebAPIUAI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FacultadId = table.Column<int>(type: "int", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    FacultadId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -271,9 +256,6 @@ namespace WebAPIUAI.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Carreras");
-
-            migrationBuilder.DropTable(
-                name: "Profesores");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");

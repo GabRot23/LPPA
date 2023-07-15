@@ -31,7 +31,7 @@ namespace WebAPIUAI.Controllers
         }
 
         [HttpGet("{id:int}", Name = "obtenerFacultad")]
-        public async Task<ActionResult<FacultadDTO>> Get(int id)
+        public async Task<ActionResult<FacultadConCarrerasDTO>> Get(int id)
         {
             var facultad = await context.Facultades
                 .Include(x => x.Carreras)
@@ -39,10 +39,10 @@ namespace WebAPIUAI.Controllers
 
             if (facultad == null)
             {
-                return NotFound();
+                return NotFound("No existe la facultad que desea obtener");
             }
 
-            var facultadDTO = mapper.Map<FacultadDTO>(facultad);
+            var facultadDTO = mapper.Map<FacultadConCarrerasDTO>(facultad);
             return facultadDTO;
         }
 

@@ -12,8 +12,8 @@ using WebAPIUAI.Data;
 namespace WebAPIUAI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230714011405_Carreras")]
-    partial class Carreras
+    [Migration("20230715154344_SinProfesores")]
+    partial class SinProfesores
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -232,13 +232,17 @@ namespace WebAPIUAI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("FacultadId")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -263,30 +267,6 @@ namespace WebAPIUAI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Facultades");
-                });
-
-            modelBuilder.Entity("WebAPIUAI.Models.Profesor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DNI")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaNacimiento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Profesores");
                 });
 
             modelBuilder.Entity("WebAPIUAI.Models.RefreshToken", b =>

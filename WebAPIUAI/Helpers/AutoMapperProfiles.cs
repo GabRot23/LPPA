@@ -16,28 +16,26 @@ namespace WebAPIUAI.Helpers
             CreateMap<IdentityUser, UserDTO>();
 
             CreateMap<Facultad, FacultadDTO>().ReverseMap();
-            CreateMap<FacultadCreacionDTO, Facultad>()
-            .ForMember(x => x.Carreras, options => options.MapFrom(MapFacultadCarrerasFacultades));
+            CreateMap<FacultadCreacionDTO, Facultad>();
+            CreateMap<Facultad, FacultadConCarrerasDTO>().ReverseMap();
 
             CreateMap<Carrera, CarreraDTO>().ReverseMap();
-            CreateMap<CarreraCreacionDTO, Carrera>().ForMember(x => x.FacultadId, options => options.MapFrom(c => c.FacultadId));
+            CreateMap<CarreraCreacionDTO, Carrera>();
             CreateMap<Carrera, CarreraConFacultadDTO>().ReverseMap();
-            CreateMap<Profesor, ProfesorDTO>().ReverseMap();
-            CreateMap<ProfesorCreacionDTO, Profesor>();
         }
 
-        private List<Carrera> MapFacultadCarrerasFacultades(FacultadCreacionDTO facultadCreacionDTO, Facultad facultad)
-        {
-            var resultado = new List<Carrera>();
-            if (facultadCreacionDTO.CarrerasIds == null) { return resultado; }
+        // private List<Carrera> MapFacultadCarrerasFacultades(FacultadCreacionDTO facultadCreacionDTO, Facultad facultad)
+        // {
+        //     var resultado = new List<Carrera>();
+        //     if (facultadCreacionDTO.CarrerasIds == null) { return resultado; }
 
-            foreach (var id in facultadCreacionDTO.CarrerasIds)
-            {
-                resultado.Add(new Carrera() { Id = id });
-            }
+        //     foreach (var id in facultadCreacionDTO.CarrerasIds)
+        //     {
+        //         resultado.Add(new Carrera() { Id = id });
+        //     }
 
-            return resultado;
-        }
+        //     return resultado;
+        // }
 
     }
 }

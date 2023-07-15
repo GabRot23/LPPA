@@ -65,7 +65,6 @@ namespace WebAPIUAI.Data
         }
         public DbSet<Facultad> Facultades { get; set; }
         public DbSet<Carrera> Carreras { get; set; }
-        public DbSet<Profesor> Profesores { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }
