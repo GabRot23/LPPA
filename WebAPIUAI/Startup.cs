@@ -12,11 +12,15 @@ using WebAPIUAI.Data;
 
 namespace WebAPIUAI
 {
+
     public class Startup
     {
+        private string MyAllowSpecificOrigins;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         }
 
         public IConfiguration Configuration { get; }
@@ -27,7 +31,10 @@ namespace WebAPIUAI
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+            });
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
@@ -68,16 +75,14 @@ namespace WebAPIUAI
                     ClockSkew = TimeSpan.Zero
                 });
 
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.WithOrigins("https://localhost:3000")// Cambiar al tener la app
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowAnyHeader();
-                });
-            });
+            // services.AddCors(options =>
+            // {
+            //     options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
+            //     {
+            //         policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost").AllowAnyHeader().AllowAnyMethod();
+            //     });
+            // });
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -95,14 +100,19 @@ namespace WebAPIUAI
 
             app.UseRouting();
 
-            app.UseCors();
+            // app.UseCors(
+            //     MyAllowSpecificOrigins
+            // );
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebAPIUAI.Data;
 using WebAPIUAI.DTOs;
 using WebAPIUAI.Models;
@@ -30,9 +31,17 @@ namespace WebAPIUAI.Controllers
         }
 
         [HttpGet("{id:int}", Name = "obtenerCarrera")]
-        public async Task<ActionResult<CarreraDTO>> Get(int id)
+        public async Task<ActionResult<CarreraConFacultadDTO>> Get(int id)
         {
-            return await Get<Carrera, CarreraDTO>(id);
+            var entidad = await context.Carreras.Include(x => x.Facultad).FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entidad == null)
+            {
+                return NotFound();
+            }
+
+            var dto = mapper.Map<CarreraConFacultadDTO>(entidad);
+            return dto;
         }
 
         [HttpPost]

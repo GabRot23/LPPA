@@ -20,8 +20,8 @@ namespace WebAPIUAI.Helpers
             .ForMember(x => x.Carreras, options => options.MapFrom(MapFacultadCarrerasFacultades));
 
             CreateMap<Carrera, CarreraDTO>().ReverseMap();
-            CreateMap<CarreraCreacionDTO, Carrera>();
-
+            CreateMap<CarreraCreacionDTO, Carrera>().ForMember(x => x.FacultadId, options => options.MapFrom(c => c.FacultadId));
+            CreateMap<Carrera, CarreraConFacultadDTO>().ReverseMap();
             CreateMap<Profesor, ProfesorDTO>().ReverseMap();
             CreateMap<ProfesorCreacionDTO, Profesor>();
         }
@@ -38,5 +38,6 @@ namespace WebAPIUAI.Helpers
 
             return resultado;
         }
+
     }
 }

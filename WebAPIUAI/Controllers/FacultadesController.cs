@@ -33,7 +33,17 @@ namespace WebAPIUAI.Controllers
         [HttpGet("{id:int}", Name = "obtenerFacultad")]
         public async Task<ActionResult<FacultadDTO>> Get(int id)
         {
-            return await Get<Facultad, FacultadDTO>(id);
+            var facultad = await context.Facultades
+                .Include(x => x.Carreras)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (facultad == null)
+            {
+                return NotFound();
+            }
+
+            var facultadDTO = mapper.Map<FacultadDTO>(facultad);
+            return facultadDTO;
         }
 
         [HttpPost]
