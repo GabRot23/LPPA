@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPIUAI.DTOs;
 
 namespace WebAPIUAI.DTOs
 {
-    public class UserClaimsDTO : UserDTO
+    public class ClaimDTO
     {
-        public List<ClaimDTO> Claims { get; set; }
+        public string ClaimType { get; set; }
+        public string ClaimValue { get; set; }
     }
 }

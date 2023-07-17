@@ -30,6 +30,8 @@ namespace WebAPIUAI.Controllers
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
 
+        private List<string> errors;
+
         public CuentasController(
             UserManager<IdentityUser> userManager,
             IConfiguration configuration,
@@ -43,12 +45,21 @@ namespace WebAPIUAI.Controllers
             this.signInManager = signInManager;
             this.context = context;
             this.mapper = mapper;
+            errors = new List<string>();
         }
 
-        [HttpPost("Crear")]
+        [HttpPost("signup")]
         public async Task<ActionResult<UserToken>> CreateUser([FromBody] UserInfo model)
         {
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var userExiste = await userManager.FindByEmailAsync(model.Email);
+            if (userExiste != null)
+            {
+                errors.Add("El usuario ya existe.");
+                return BadRequest(
+                        new { errors = errors }
+                );
+            }
             var result = await userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
@@ -57,11 +68,18 @@ namespace WebAPIUAI.Controllers
             }
             else
             {
-                return BadRequest(result.Errors);
+                errors.Add("Error al crear el usuario.");
+                foreach (var error in result.Errors)
+                {
+                    errors.Add(error.Description);
+                }
+                return BadRequest(
+                    new { errors = errors }
+                );
             }
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<ActionResult<UserToken>> Login([FromBody] UserInfo model)
         {
             var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
@@ -74,7 +92,11 @@ namespace WebAPIUAI.Controllers
             }
             else
             {
-                return BadRequest("Login incorrecto");
+                errors.Add("Error al iniciar sesión.");
+
+                return BadRequest(
+                    new { errors = errors }
+                );
             }
         }
 
@@ -93,7 +115,7 @@ namespace WebAPIUAI.Controllers
             {
                 UsuarioId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value,
                 Token = tokenNuevo.Token,
-                FechaCreacion = DateTime.UtcNow,
+                FechaCreacion = DateTime.Now,
                 FechaExpiracion = tokenNuevo.Expiration,
             };
 
@@ -122,7 +144,7 @@ namespace WebAPIUAI.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["jwt:key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddYears(1);
+            var expiration = DateTime.Now.AddHours(1);
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: null,
@@ -158,17 +180,31 @@ namespace WebAPIUAI.Controllers
         //Get Claims de un usuario
         [HttpGet("UserRoles/{userId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<ActionResult<List<UserClaimsDTO>>> GetUserClaims(string userId)
+        public async Task<ActionResult<UserClaimsDTO>> GetUserClaims(string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return NotFound("El usuario no existe");
+                return NotFound(new { message = "Usuario no encontrado" });
             }
 
             var claims = await userManager.GetClaimsAsync(user);
 
-            return claims.Select(x => new UserClaimsDTO { ClaimType = x.Type, ClaimValue = x.Value }).ToList();
+            var claimsDTO = new List<ClaimDTO>();
+
+            foreach (Claim claim in claims)
+            {
+                claimsDTO.Add(new ClaimDTO() { ClaimType = claim.Type, ClaimValue = claim.Value });
+            }
+
+            var userDTO = new UserClaimsDTO()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Claims = claimsDTO,
+            };
+
+            return userDTO;
         }
 
 
@@ -180,7 +216,7 @@ namespace WebAPIUAI.Controllers
             var role = new IdentityRole { Name = crearRolDTO.Nombre, NormalizedName = crearRolDTO.Nombre.ToUpper() };
             await context.Roles.AddAsync(role);
             await context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         [HttpPost("AsignarRol")]
@@ -190,25 +226,43 @@ namespace WebAPIUAI.Controllers
             var user = await userManager.FindByIdAsync(editarRolDTO.UserId);
             if (user == null)
             {
-                return NotFound("El usuario no existe");
+                errors.Add("El usuario no existe.");
             }
 
             //Validar si el rol existe
             var role = await context.Roles.FirstOrDefaultAsync(x => x.Name == editarRolDTO.RoleName);
             if (role == null)
             {
-                return NotFound("El rol no existe");
+                errors.Add("El rol no existe.");
             }
 
             //Validar si el usuario ya tiene el rol
             var userHasRole = await userManager.IsInRoleAsync(user, editarRolDTO.RoleName);
-            if (userHasRole)
+            var userHasClaim = await userManager.GetClaimsAsync(user);
+            foreach (var claim in userHasClaim)
             {
-                return BadRequest("El usuario ya tiene el rol");
+                if (claim.Type == ClaimTypes.Role && claim.Value == editarRolDTO.RoleName)
+                {
+                    userHasRole = true;
+                }
             }
 
-            await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, editarRolDTO.RoleName));
-            return NoContent();
+            if (userHasRole)
+            {
+                errors.Add("El usuario ya posee el rol asignado.");
+            }
+
+            if (errors.Count > 0)
+            {
+                return BadRequest(
+                    new { errors = errors }
+                );
+            }
+            else
+            {
+                await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, editarRolDTO.RoleName));
+                return Ok("Se asigno el rol correctamente.");
+            }
         }
 
         [HttpPost("RemoverRol")]
@@ -218,23 +272,59 @@ namespace WebAPIUAI.Controllers
             var user = await userManager.FindByIdAsync(editarRolDTO.UserId);
             if (user == null)
             {
-                return NotFound("El usuario no existe");
+                errors.Add("El usuario no existe.");
             }
 
             var role = await context.Roles.FirstOrDefaultAsync(x => x.Name == editarRolDTO.RoleName);
             if (role == null)
             {
-                return NotFound("El rol no existe");
+                errors.Add("El rol no existe.");
             }
 
-            var userHasRole = await userManager.IsInRoleAsync(user, editarRolDTO.RoleName);
-            if (!userHasRole)
+            var userHasClaim = false;
+
+            var userClaims = await userManager.GetClaimsAsync(user);
+            foreach (var claim in userClaims)
             {
-                return BadRequest("El usuario no tiene el rol");
+                if (claim.Type == ClaimTypes.Role && claim.Value == editarRolDTO.RoleName)
+                {
+                    userHasClaim = true;
+                }
             }
 
-            await userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, editarRolDTO.RoleName));
-            return NoContent();
+            if (!userHasClaim)
+            {
+                errors.Add("El usuario no posee el rol asignado.");
+            }
+
+            if (errors.Count > 0)
+            {
+                return BadRequest(
+                    new { errors = errors }
+                );
+            }
+            else
+            {
+                await userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, editarRolDTO.RoleName));
+                return Ok("Se removio el rol correctamente.");
+            }
+        }
+
+        [HttpDelete("{userId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<ActionResult> EliminarUsuario(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                errors.Add("El usuario no existe.");
+                return BadRequest(
+                    new { errors = errors }
+                );
+            }
+
+            await userManager.DeleteAsync(user);
+            return Ok("Se elimino el usuario correctamente.");
         }
     }
 }

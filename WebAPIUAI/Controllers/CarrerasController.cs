@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -19,11 +21,13 @@ namespace WebAPIUAI.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        private List<string> errors;
 
         public CarrerasController(ApplicationDbContext context, IMapper mapper) : base(context, mapper)
         {
             this.context = context;
             this.mapper = mapper;
+            errors = new List<string>();
         }
 
         [HttpGet]
@@ -49,10 +53,9 @@ namespace WebAPIUAI.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Post([FromBody] CarreraCreacionDTO carreraCreacionDTO)
         {
-            var errors = new List<string>();
-
             // Se verifica que el nombre de la carrera no exista en otra carrera
             if (await ExisteCarreraNombre(carreraCreacionDTO.Nombre))
                 errors.Add($"Ya existe una carrera con el nombre {carreraCreacionDTO.Nombre}");
@@ -71,6 +74,7 @@ namespace WebAPIUAI.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Put(int id, [FromBody] CarreraCreacionDTO carreraCreacionDTO)
         {
             // Se verifica que exista la carrera que se quiere modificar
@@ -79,11 +83,11 @@ namespace WebAPIUAI.Controllers
                 return NotFound("No existe la carrera que desea modificar");
             }
 
-            // Se verifica que el nombre de la carrera no exista en otra carrera
-            if (await ExisteCarreraNombre(carreraCreacionDTO.Nombre))
-            {
-                return BadRequest($"Ya existe una carrera con el nombre {carreraCreacionDTO.Nombre}");
-            }
+            // // Se verifica que el nombre de la carrera no exista en otra carrera
+            // if (await ExisteCarreraNombre(carreraCreacionDTO.Nombre))
+            // {
+            //     return BadRequest($"Ya existe una carrera con el nombre {carreraCreacionDTO.Nombre}");
+            // }
 
             // Se verifica que exista la facultad a la que se quiere asignar la carrera
             if (!await ExisteFacultadId(carreraCreacionDTO.FacultadId))
@@ -95,6 +99,7 @@ namespace WebAPIUAI.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             // Se verifica que exista la carrera que se quiere eliminar

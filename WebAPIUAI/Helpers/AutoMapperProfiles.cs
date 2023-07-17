@@ -22,20 +22,9 @@ namespace WebAPIUAI.Helpers
             CreateMap<Carrera, CarreraDTO>().ReverseMap();
             CreateMap<CarreraCreacionDTO, Carrera>();
             CreateMap<Carrera, CarreraConFacultadDTO>().ReverseMap();
+
         }
 
-        // private List<Carrera> MapFacultadCarrerasFacultades(FacultadCreacionDTO facultadCreacionDTO, Facultad facultad)
-        // {
-        //     var resultado = new List<Carrera>();
-        //     if (facultadCreacionDTO.CarrerasIds == null) { return resultado; }
-
-        //     foreach (var id in facultadCreacionDTO.CarrerasIds)
-        //     {
-        //         resultado.Add(new Carrera() { Id = id });
-        //     }
-
-        //     return resultado;
-        // }
 
     }
 }
